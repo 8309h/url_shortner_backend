@@ -53,7 +53,7 @@ async function login(req, res) {
         tokenStore[user.email] = {normaltoken, refreshtoken };
 
         // Send tokens in response
-        res.json({ msg: "Login Successful", normaltoken, refreshtoken,user });
+        res.json({ msg: "Login Successful", normaltoken, refreshtoken,user});
 
         console.log(tokenStore)
 
