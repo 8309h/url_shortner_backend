@@ -3,6 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const { connection } = require('./configs/db');
 const urlRouter = require('./routes/urlRoutes')
+const userRouter =  require('./routes/userRoutes')
 require('dotenv').config();
 
 const app = express();
@@ -14,51 +15,12 @@ app.get('/',(req,res)=> {
     res.send("Welcome to URL-Shortner")
 })
 
+app.use('/url',urlRouter);
+app.use('/user',userRouter);
 
 
-const { RTMClient } = require('@slack/rtm-api');
 
-// Initialize a new RTM client
-const rtm = new RTMClient(process.env.SLACK_BOT_TOKEN);
 
-// Listen for the 'message' event
-rtm.on('message', async (event) => {
-  try {
-    // Check if the event is a message and has text
-    if (event.type === 'message' && event.text) {
-      // Extract long URLs from the message text
-      const longUrls = extractLongUrlsFromMessage(event.text);
-
-      // Generate short URLs for each long URL
-      for (const longUrl of longUrls) {
-        const shortUrl = await generateShortUrl(longUrl); // Call your URL shortening service
-        // Respond back with the shortened URL
-        await rtm.sendMessage(`Shortened URL for ${longUrl}: ${shortUrl}`, event.channel);
-      }
-    }
-  } catch (error) {
-    console.error('Error processing message:', error);
-    // Handle errors gracefully
-  }
-});
-
-// Function to extract long URLs from message text
-function extractLongUrlsFromMessage(text) {
-  
-   
-}
-
-// Function to generate short URL from long URL
-async function generateShortUrl(longUrl) {
-  // Implement your logic to call your URL shortening service
-   app.use('/url',urlRouter);
-}
-
-// Start the RTM client
-(async () => {
-  await rtm.start();
-  console.log('Slack bot is running!');
-})();
 
 const Port = process.env.PORT || 8000; 
 
